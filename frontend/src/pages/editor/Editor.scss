@@ -1,0 +1,37 @@
+.editor {
+    height: 100vh;
+}
+.sidebar {
+    background-color: var(--sidebar-background);
+    min-width: 300px;
+    height: 100%;
+    padding: 20px;
+}
+.visuals {
+    padding: 150px;
+    width: 100%;
+}
+
+.header {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+    color: var(--text-muted);
+}
+.sidebar svg, .sidebar .chart {
+    width: 50px !important;
+    height: 30px;
+}
+.sidebar-values {
+    margin-top: 50px;
+
+    .button {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+}
+.sidebar input {
+    margin-bottom: 7px;
+}
