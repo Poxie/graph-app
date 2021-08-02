@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import './Chart.scss';
+import './LineChart.scss';
 import { Flex } from './Flex';
 
 interface Props {
     values: number[];
     animate?: boolean;
 }
-export const Chart: React.FC<Props> = ({ values, animate }) => {
+export const LineChart: React.FC<Props> = ({ values, animate }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [points, setPoints] = useState('');
     const [height, setHeight] = useState(0);
@@ -64,7 +64,7 @@ export const Chart: React.FC<Props> = ({ values, animate }) => {
     pathPoints += ` L ${pathPointsObjects[pathPointsObjects.length - 1].top} ${height}`
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
-            <svg style={{height: '100%', width: '100%'}} viewBox={`0 0 ${width} ${height}`}>
+            <svg style={{height: '100%', width: '100%'}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
                 <polyline 
                     points={points}
                     fill={'none'}
