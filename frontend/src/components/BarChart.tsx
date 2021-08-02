@@ -32,9 +32,8 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
 
     const largestValue = Math.max(...values);
 
-    useEffect(() => {
+    const updateElements = useMemo(() => () => {
         if(!ref.current) return;
-
         const elements = values.map(value => {
             if(!ref.current) return {height: 0, width: 0, value: 0};
             return {
@@ -46,7 +45,9 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
         setHeight(ref.current.offsetHeight);
         setWidth(ref.current.offsetWidth);
         setElements(elements);
-    }, [ref.current, values]);
+    }, [values]);
+
+    useEffect(updateElements, [ref.current, values]);
 
     const onEnter = useMemo(() => (bar: Bar) => {
         if(!ref.current || !bar.left) return;

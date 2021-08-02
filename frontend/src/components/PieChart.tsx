@@ -32,12 +32,11 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
     const ref = useRef<HTMLDivElement>(null);
     const filled = useRef(0);
 
-    const valueTotal = values.reduce((a, b) => a + b);
-
     useEffect(() => {
         if(!ref.current) return;
         setWidth(ref.current.offsetWidth);
         setHeight(ref.current.offsetHeight);
+        const valueTotal = values.reduce((a, b) => a + b);
 
         const elements = values.map((value, key) => {
             return {
@@ -47,7 +46,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
             }
         })
         setElements(elements);
-    }, [setElements, ref.current, valueTotal, values]);
+    }, [setElements, ref.current, values]);
 
     const onEnter = useMemo(() => (index: number) => {
         setElements(elements => {
@@ -86,10 +85,12 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
 
                     const ref = createRef<SVGCircleElement>()
 
-                    setTimeout(() => {
-                        if(!ref.current) return;
-                        ref.current.style.strokeDashoffset = dashOffset.toString();
-                    }, 10);
+                    if(animate) {
+                        setTimeout(() => {
+                            if(!ref.current) return;
+                            ref.current.style.strokeDashoffset = dashOffset.toString();
+                        }, 10);
+                    }
 
                     const animationDuration = 800;
                     const duration = animationDuration * element.percentage / 100;
@@ -110,7 +111,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
                             onMouseEnter={() => onEnter(key)}
                             onMouseLeave={onLeave}
                             className={`${element.isHovering ? ' is-hovering' : ''}${element.hasHoveringElement ? ' has-hovering' : ''}`}
-                            style={{transition: `stroke-dashoffset ${duration}ms linear ${delay}ms`}}
+                            style={{transition: animate ? `stroke-dashoffset ${duration}ms linear ${delay}ms` : 'none'}}
                             ref={ref}
                         />
                     )
