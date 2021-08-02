@@ -11,7 +11,7 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
     const [points, setPoints] = useState('');
     const [height, setHeight] = useState(0);
     const [width, setWidth] = useState(0);
-    const [hoverPoint, setHoverPoint] = useState(['', '']);
+    const [hoverPoint, setHoverPoint] = useState<any>(['', '', {}]);
     
     const highestValue = Math.max(...values);
     const valueLength = values.length;
@@ -49,7 +49,7 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
             const pointIndex = Math.floor(left / pointWidth);
             const newPoints = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) - 1.006)?.join(' ');
             const newPointsToo = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) + 1.006)?.join(' ');
-            setHoverPoint([newPoints, newPointsToo]);
+            setHoverPoint([newPoints, newPointsToo, {value: values[pointIndex], left: newPoints?.split(' ')[0], top: newPoints?.split(' ')[1]}]);
         }
         ref.current?.addEventListener('mousemove', handleMouseMove);
 
@@ -57,7 +57,7 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
             window.removeEventListener('resize', updatePoints);
             ref.current?.removeEventListener('mousemove', handleMouseMove);
         }
-    }, [points]);
+    }, [points, values]);
 
     const pathPointsObjects = points.split(' ').map(point => {return {top: point.split(',')[0], left: point.split(',')[1]}});
     let pathPoints = pathPointsObjects.map(point => `L ${point.top} ${point.left}`).join(' ');
@@ -83,8 +83,12 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
                     style={{transform: 'translateX(-4px)'}}
                     stroke={'var(--secondary-background)'}
                     className={'hover-point'}
+                    data-point-value={hoverPoint[2]}
                 />
             </svg>
+            <span className="hover-value" style={{left: `${hoverPoint[2].left - 48}px`, top: `${hoverPoint[2].top - 40}px`}}>
+                {hoverPoint[2].value}
+            </span>
         </Flex>
     )
 }
