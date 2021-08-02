@@ -1,15 +1,29 @@
+import { useParams } from "react-router-dom"
 import { Flex } from "../../components/Flex"
-import { CreateOptions } from "./CreateOptions"
+import { Params } from "../../types/Params";
+import { Editor } from "../editor/Editor";
+import { CreateScreen } from "./CreateScreen";
 
 export const Create = () => {
+    const { type } = useParams<Params>();
+
+    let component = null;
+    switch(type) {
+        case undefined:
+            component = <CreateScreen />;
+            break;
+        default:
+            if(!['line', 'bar', 'pie'].includes(type)) return component = <CreateScreen />;
+            component = (
+                <Editor 
+                    type={type}
+                />
+            )
+    }
+
     return(
-        <Flex className="create" flexDirection={'column'} justifyContent={'center'}>
-            <h1>
-                Choose the chart of your liking
-            </h1>
-            <Flex className="create-container" alignItems={'center'}>
-                <CreateOptions />
-            </Flex>
-        </Flex>
+        <div className="create">
+            {component}
+        </div>
     )
 }
