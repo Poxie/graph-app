@@ -1,0 +1,26 @@
+.create {
+    --option-margin: 15px;
+}
+
+.create {
+    min-height: 100vh;
+    text-align: center;
+
+    h1 {
+        font-size: 30px;
+        margin: 0;
+    }
+}
+.create-container {
+    padding: 50px 0;
+}
+.create-options {
+    width: calc(1100px + 4 * var(--option-margin));
+    margin: 0 auto;
+    max-width: 90%;
+}
+.create-option {
+    height: 350px;
+    width: 350px;
+    margin: var(--option-margin);
+}
