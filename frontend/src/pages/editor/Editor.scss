@@ -3,7 +3,7 @@
 }
 .sidebar {
     background-color: var(--sidebar-background);
-    min-width: 300px;
+    min-width: var(--sidebar-width);
     height: 100%;
     padding: 20px;
 }
