@@ -1,0 +1,13 @@
+.pie-chart {
+    .has-hovering {
+        opacity: .5;
+    }
+    circle {
+        pointer-events: visibleStroke;
+    }
+    text {
+        color: var(--primary-text);
+        position: absolute;
+        top: 50%;
+    }
+}

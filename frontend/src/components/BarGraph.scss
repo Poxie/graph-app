@@ -1,0 +1,40 @@
+svg:hover {
+    rect:hover {
+        opacity: 1;
+    }
+    rect {
+        opacity: .6;
+    }
+}
+rect {
+    &.animation {
+        fill: var(--primary-color);
+    }
+    &.no-animation {
+        fill: var(--third-background);
+    }
+}
+.animate {
+    rect.animation {
+        height: 0;
+        transform: translateY(100%);
+        animation: animate-bar-in .8s forwards;
+    }
+}
+@keyframes animate-bar-in {
+    from {
+        height: 0;
+        transform: translateY(100%);
+    }
+    to {
+        height: 100%;
+        transform: translateY(0);
+    }
+}
+.current-hovering {
+    position: absolute;
+    z-index: 14;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
