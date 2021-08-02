@@ -5,11 +5,14 @@
 :root {
   --primary-background: #0e1015;
   --secondary-background: #181b24;
+  --dropdown-background: #1b1f29;
   --third-background: #1b1f2a;
-  --navbar-background: #0c0e13;
+  --sidebar-background: #0c0e13;
+  --input-background: #191b25;
   --primary-color: #dd364d;
   --border-radius: 8px;
   --primary-text: #fff;
+  --text-muted: #949494;
 }
 
 body {
