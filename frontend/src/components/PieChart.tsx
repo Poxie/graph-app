@@ -47,7 +47,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
             }
         })
         setElements(elements);
-    }, [setElements, ref.current, valueTotal]);
+    }, [setElements, ref.current, valueTotal, values]);
 
     const onEnter = useMemo(() => (index: number) => {
         setElements(elements => {
