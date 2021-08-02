@@ -12,7 +12,7 @@ function App() {
           component={Home}
         />
         <Route 
-          path="/create"
+          path="/create/:type?"
           component={Create}
         />
       </Router>
