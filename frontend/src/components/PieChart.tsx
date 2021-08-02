@@ -32,7 +32,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
     const ref = useRef<HTMLDivElement>(null);
     const filled = useRef(0);
 
-    useEffect(() => {
+    const updateElements = useMemo(() => () => {
         if(!ref.current) return;
         setWidth(ref.current.offsetWidth);
         setHeight(ref.current.offsetHeight);
@@ -46,7 +46,14 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
             }
         })
         setElements(elements);
-    }, [setElements, ref.current, values]);
+    }, [setElements, values]);
+
+    useEffect(updateElements, [setElements, ref.current, values]);
+    useEffect(() => {
+        window.addEventListener('resize', updateElements);
+
+        return () => window.removeEventListener('resize', updateElements);
+    }, []);
 
     const onEnter = useMemo(() => (index: number) => {
         setElements(elements => {
@@ -76,7 +83,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
     const radius = 30;
     return(
         <div className="chart pie-chart" ref={ref}>
-            <svg width={width} height={height} viewBox={`0 0 100 100`}>
+            <svg width={'100%'} height={'100%'} viewBox={`0 0 100 100`}>
                 {elements.map((element, key) => {
                     const dashArray = 2*Math.PI*radius;
                     const dashOffset = dashArray - (dashArray * element.percentage / 100);

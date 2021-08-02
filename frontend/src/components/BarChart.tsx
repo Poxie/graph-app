@@ -48,6 +48,11 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
     }, [values]);
 
     useEffect(updateElements, [ref.current, values]);
+    useEffect(() => {
+        window.addEventListener('resize', updateElements);
+
+        return () => window.removeEventListener('resize', updateElements)
+    }, []);
 
     const onEnter = useMemo(() => (bar: Bar) => {
         if(!ref.current || !bar.left) return;
@@ -69,7 +74,7 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
             <span className="current-hovering" style={{top: `${hovering?.top}px`, left: `${hovering?.left}px`, width: `${hovering?.width}px`}}>
                 {hovering?.value}
             </span>
-            <svg height={height} width={width}>
+            <svg height={'100%'} width={'100%'}>
                 {elements.map((value, key) => {
                     return(
                         <g key={key}>
