@@ -1,6 +1,8 @@
 import { Flex } from "./Flex"
 import './BarChart.scss';
 import { useEffect, useMemo, useRef, useState } from "react";
+import { XAxis } from "./XAxis";
+import { YAxis } from "./YAxis";
 
 interface Props {
     values: number[];
@@ -8,6 +10,7 @@ interface Props {
     spacing?: number;
     delay?: number;
     radius?: number;
+    hasYAxis?: boolean;
 }
 interface Bar {
     width: number;
@@ -21,7 +24,7 @@ interface Hover {
     value: number;
     width: number;
 }
-export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.25, radius=8 }) => {
+export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.25, radius=8, hasYAxis }) => {
     // Container height
     const [height, setHeight] = useState(0);
     // Container width
@@ -31,6 +34,7 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
     const ref = useRef<HTMLDivElement>(null);
 
     const largestValue = Math.max(...values);
+    const YAxisWidth = hasYAxis ? 40 : 0;
 
     const updateElements = useMemo(() => () => {
         if(!ref.current) return;
@@ -38,7 +42,7 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
             if(!ref.current) return {height: 0, width: 0, value: 0};
             return {
                 height: (value / largestValue) * (ref.current.offsetHeight - 20),
-                width: (ref.current.offsetWidth - spacing * (values.length + 1)) / values.length,
+                width: (ref.current.offsetWidth - spacing * (values.length + 1) - YAxisWidth) / values.length,
                 value
             }
         })
@@ -71,26 +75,40 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
 
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
-            <span className="current-hovering" style={{top: `${hovering?.top}px`, left: `${hovering?.left}px`, width: `${hovering?.width}px`}}>
-                {hovering?.value}
-            </span>
+            {hovering && (
+                <span className="current-hovering" style={{top: `${hovering.top}px`, left: `${hovering.left + YAxisWidth / 2 - 5}px`, width: `${hovering.width + YAxisWidth}px`}}>
+                    {hovering.value}
+                </span>
+            )}
+            {hasYAxis && (
+                <XAxis />
+            )}
             <svg height={'100%'} width={'100%'}>
+                {hasYAxis && (
+                    <YAxis 
+                        values={values}
+                        height={height}
+                        width={width}
+                    />
+                )}
                 {elements.map((value, key) => {
+                    const x = spacing * (key + 1) + value.width * key + YAxisWidth;
+                    const y = height - value.height;
                     return(
                         <g key={key}>
                             <rect 
                                 width={value.width} 
                                 height={value.height} 
-                                y={height - value.height} 
-                                x={spacing * (key + 1) + value.width * key}
+                                y={y} 
+                                x={x}
                                 rx={radius}
                                 className={"no-animation"}
                             />
                             <rect 
                                 width={value.width} 
                                 height={value.height} 
-                                y={height - value.height} 
-                                x={spacing * (key + 1) + value.width * key}
+                                y={y} 
+                                x={x}
                                 style={{animationDelay: `${key * delay}s`}}
                                 rx={radius}
                                 className="animation"

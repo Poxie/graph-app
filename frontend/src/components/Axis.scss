@@ -1,0 +1,12 @@
+.axis {
+    height: 100%;
+    position: absolute;
+    left: 0;
+}
+.y-axis {
+    width: 2px;
+    height: 100%;
+    background-color: var(--axis-color);
+    margin-left: 15px;
+    position: absolute;
+}
