@@ -1,10 +1,11 @@
 import { BarChart } from "../../components/BarChart";
 import { LineChart } from '../../components/LineChart';
 import { PieChart } from "../../components/PieChart";
+import { ChartValue } from "../../types/ChartValue";
 import { Params } from "../../types/Params";
 
 interface Props {
-    values: number[];
+    values: ChartValue[];
     type: Params['type'];
 }
 
@@ -17,6 +18,7 @@ export const Visuals: React.FC<Props> = ({ values, type }) => {
                 <BarChart 
                     values={values}
                     animate={false}
+                    hasYAxis={true}
                 />
             )
             break;

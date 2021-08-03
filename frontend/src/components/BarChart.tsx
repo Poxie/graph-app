@@ -3,9 +3,10 @@ import './BarChart.scss';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { XAxis } from "./XAxis";
 import { YAxis } from "./YAxis";
+import { ChartValue } from "../types/ChartValue";
 
 interface Props {
-    values: number[];
+    values: ChartValue[];
     animate?: boolean;
     spacing?: number;
     delay?: number;
@@ -33,17 +34,18 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
     const [hovering, setHovering] = useState<null | Hover>(null);
     const ref = useRef<HTMLDivElement>(null);
 
-    const largestValue = Math.max(...values);
+    const numberValues = values.map(bar => bar.value);
+    const largestValue = Math.max(...numberValues);
     const YAxisWidth = hasYAxis ? 40 : 0;
 
     const updateElements = useMemo(() => () => {
         if(!ref.current) return;
-        const elements = values.map(value => {
+        const elements = numberValues.map(value => {
             if(!ref.current) return {height: 0, width: 0, value: 0};
             return {
                 height: (value / largestValue) * (ref.current.offsetHeight - 20),
                 width: (ref.current.offsetWidth - spacing * (values.length + 1) - YAxisWidth) / values.length,
-                value
+                value: value
             }
         })
         setHeight(ref.current.offsetHeight);
@@ -51,12 +53,12 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
         setElements(elements);
     }, [values]);
 
-    useEffect(updateElements, [ref.current, values]);
     useEffect(() => {
+        updateElements();
         window.addEventListener('resize', updateElements);
 
         return () => window.removeEventListener('resize', updateElements)
-    }, []);
+    }, [values]);
 
     const onEnter = useMemo(() => (bar: Bar) => {
         if(!ref.current || !bar.left) return;
@@ -86,7 +88,7 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
             <svg height={'100%'} width={'100%'}>
                 {hasYAxis && (
                     <YAxis 
-                        values={values}
+                        values={numberValues}
                         height={height}
                         width={width}
                     />

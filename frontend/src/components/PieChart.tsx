@@ -1,4 +1,5 @@
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
+import { ChartValue } from "../types/ChartValue";
 import './PieChart.scss';
 
 const colors = ['#80e080', '#4fc3f7', '#9575cd', '#f06292', '#bc23f3'];
@@ -13,7 +14,7 @@ const getPercentageColor = (index: number) => {
 }
 
 interface Props {
-    values: number[];
+    values: ChartValue[];
     strokeWidth?: number
     animate?: boolean;
 }
@@ -32,13 +33,15 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
     const ref = useRef<HTMLDivElement>(null);
     const filled = useRef(0);
 
+    const numberValues = values.map(value => value.value);
+
     const updateElements = useMemo(() => () => {
         if(!ref.current) return;
         setWidth(ref.current.offsetWidth);
         setHeight(ref.current.offsetHeight);
-        const valueTotal = values.reduce((a, b) => a + b);
+        const valueTotal = numberValues.reduce((a, b) => a + b);
 
-        const elements = values.map((value, key) => {
+        const elements = numberValues.map((value, key) => {
             return {
                 percentage: (value / valueTotal) * 100,
                 color: getPercentageColor(key),

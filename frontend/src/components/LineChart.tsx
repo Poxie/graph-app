@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import './LineChart.scss';
 import { Flex } from './Flex';
+import { ChartValue } from '../types/ChartValue';
 
 interface Props {
-    values: number[];
+    values: ChartValue[];
     animate?: boolean;
 }
 export const LineChart: React.FC<Props> = ({ values, animate }) => {
@@ -13,7 +14,8 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
     const [width, setWidth] = useState(0);
     const [hoverPoint, setHoverPoint] = useState<any>(['', '', {}]);
     
-    const highestValue = Math.max(...values);
+    const numberValues = values.map(value => value.value);
+    const highestValue = Math.max(...numberValues);
     const valueLength = values.length;
 
     const getPoints = useMemo(() => (values: number[], chartWidth: number, chartHeight: number) => {
@@ -30,7 +32,7 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
         
         const chartWidth = ref.current.offsetWidth;
         const chartHeight = ref.current.offsetHeight;
-        const points = getPoints(values, chartWidth, chartHeight).join(' ');
+        const points = getPoints(numberValues, chartWidth, chartHeight).join(' ');
         setPoints(points);
         setWidth(chartWidth);
         setHeight(chartHeight);
@@ -49,7 +51,7 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
             const pointIndex = Math.floor(left / pointWidth);
             const newPoints = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) - 1.006)?.join(' ');
             const newPointsToo = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) + 1.006)?.join(' ');
-            setHoverPoint([newPoints, newPointsToo, {value: values[pointIndex], left: newPoints?.split(' ')[0], top: newPoints?.split(' ')[1]}]);
+            setHoverPoint([newPoints, newPointsToo, {value: numberValues[pointIndex], left: newPoints?.split(' ')[0], top: newPoints?.split(' ')[1]}]);
         }
         ref.current?.addEventListener('mousemove', handleMouseMove);
 

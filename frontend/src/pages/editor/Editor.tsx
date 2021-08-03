@@ -4,13 +4,14 @@ import { Params } from "../../types/Params";
 import { Sidebar } from "./Sidebar"
 import { Visuals } from "./Visuals";
 import './Editor.scss';
+import { initialChartValues } from "../../types/ChartValue";
 
 interface Props {
     type: Params['type'];
 }
 
 export const Editor: React.FC<Props> = ({ type }) => {
-    const [values, setValues] = useState([1,5,12,10,15]);
+    const [values, setValues] = useState(initialChartValues());
 
     return(
         <Flex className="editor">
@@ -21,7 +22,7 @@ export const Editor: React.FC<Props> = ({ type }) => {
             />
             <Visuals 
                 type={type}
-                values={values.filter(value => !isNaN(value))}
+                values={values.filter(value => !isNaN(value.value))}
             />
         </Flex>
     )

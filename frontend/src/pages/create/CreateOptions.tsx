@@ -9,22 +9,22 @@ export const CreateOptions = () => {
     return(
         <Flex className="create-options" flexWrap={'wrap'} justifyContent={'center'}>
             <CreateOption path={'line'}>
-                <LineChart 
+                {/* <LineChart 
                     values={[1,5,8,10,15,20,30,32,25,30,20,25,40]}
                     animate={true}
-                />
+                /> */}
             </CreateOption>
             <CreateOption path={'bar'}>
                 <BarChart 
-                    values={[50,100,200]}
+                    values={[{value: 50, label: 'Potatoes'}, {value: 100, label: 'Onions'}, {value: 200, label: 'Meatballs'}]}
                     animate={true}
                 />
             </CreateOption>
             <CreateOption path={'pie'}>
-                <PieChart 
+                {/* <PieChart 
                     values={[10, 15, 30, 41, 21]}
                     animate={true}
-                />
+                /> */}
             </CreateOption>
         </Flex>
     )
