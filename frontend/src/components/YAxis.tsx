@@ -26,14 +26,13 @@ export const YAxis: React.FC<Props> = ({ values, height, width }) => {
         const x = 10;
 
         return(
-            <>
+            <g key={key}>
             <path 
                 stroke-width="3" 
                 stroke="var(--third-background)" 
                 d={`M ${x * 3} ${y - 5} l ${width} 0`}
             />
             <text 
-                key={key}
                 x={x}
                 y={y}
                 fill={'var(--text-muted)'}
@@ -41,7 +40,7 @@ export const YAxis: React.FC<Props> = ({ values, height, width }) => {
             >
                 {value}
             </text>
-            </>
+            </g>
         )
     });
     
