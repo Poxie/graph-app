@@ -3,6 +3,7 @@ import { Button } from "../../components/Button"
 import { Flex } from "../../components/Flex"
 import { Input } from "../../components/Input"
 import { ChartValue } from "../../types/ChartValue";
+import { ValueInputs } from "./ValueInputs";
 
 const findDuplicates = (arr: number[]) => {
     let duplicates: number[] = [];
@@ -29,11 +30,12 @@ export const SidebarValues: React.FC<Props> = ({ values, setValues }) => {
         valueLength.current = values.length;
     }, [values.length]);
 
-    const handleChange = (value: number, index: number) => {
+    const handleChange = (type: 'value' | 'label', value: number | string, index: number) => {
         setValues(previous => {
             const newValues = previous.map((prev, key) => {
                 if(key === index) {
-                    prev.value = value;
+                    // @ts-ignore
+                    prev[type] = value;
                 }
                 return prev;
             })
@@ -79,15 +81,11 @@ export const SidebarValues: React.FC<Props> = ({ values, setValues }) => {
             </span>
             {values.map((value, key) => {
                 return(
-                    <Input 
-                        defaultValue={isNaN(value.value) ? '' : value.value.toString()}
-                        placeholder={'Enter value...'}
-                        onChange={(value) => handleChange(parseInt(value), key)}
-                        noSubmit={true}
-                        defaultFocus={true}
-                        onFocus={() => onFocus(key)}
-                        onBlur={onBlur}
-                        onKeyPress={handleKeyPress}
+                    <ValueInputs 
+                        handleChange={handleChange}
+                        value={value.value}
+                        label={value.label}
+                        index={key}
                         key={key}
                     />
                 )

@@ -33,5 +33,15 @@
     }
 }
 .sidebar input {
-    margin-bottom: 7px;
+    margin-bottom: 12px;
+}
+.value-inputs {
+    input {
+        border-radius: 5px !important;
+    }
+    .input:first-of-type input {
+        width: 50px;
+        text-align: center;
+        margin-right: 8px;
+    }
 }
