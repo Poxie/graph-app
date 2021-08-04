@@ -21,15 +21,16 @@ interface Props {
 interface Element {
     percentage: number;
     value: number;
+    label: string;
     color: string;
     isHovering?: boolean;
     hasHoveringElement?: boolean;
 }
-export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) => {
+export const PieChart: React.FC<Props> = ({ values, strokeWidth=200, animate }) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [elements, setElements] = useState<Element[]>([]);
-    const [hovering, setHovering] = useState<null | number>(null);
+    const [hovering, setHovering] = useState<null | Element>(null);
     const ref = useRef<HTMLDivElement>(null);
     const filled = useRef(0);
     const colors = useRef<string[]>([]);
@@ -48,11 +49,12 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
         setHeight(ref.current.offsetHeight);
         const valueTotal = numberValues.reduce((a, b) => a + b);
 
-        const elements = numberValues.map((value, key) => {
+        const elements = values.map((value, key) => {
             return {
-                percentage: (value / valueTotal) * 100,
+                percentage: (value.value / valueTotal) * 100,
                 color: colors.current[key] || generateColor(key),
-                value
+                label: value.label,
+                value: value.value
             }
         })
         setElements(elements);
@@ -71,7 +73,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
                 if(key === index) {
                     element.isHovering = true;
                     element.hasHoveringElement = false;
-                    setHovering(element.percentage);
+                    setHovering(element);
                 } else {
                     element.isHovering = false;
                     element.hasHoveringElement = true;
@@ -90,15 +92,15 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
         }));
     }, []);
 
-    const radius = 30;
+    const radius = width / 3;
     return(
         <div className="chart pie-chart" ref={ref}>
-            <svg width={'100%'} height={'100%'} viewBox={`0 0 100 100`}>
+            <svg width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${width}`}>
                 {elements.map((element, key) => {
                     const dashArray = 2*Math.PI*radius;
                     const dashOffset = dashArray - (dashArray * element.percentage / 100);
                     const angle = (filled.current * 360 / 100) + (-90);
-                    const rotate = `rotate(${angle} 50 50)`;
+                    const rotate = `rotate(${angle} ${width / 2} ${width / 2})`;
 
                     const ref = createRef<SVGCircleElement>()
 
@@ -130,14 +132,20 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
                             className={`${element.isHovering ? ' is-hovering' : ''}${element.hasHoveringElement ? ' has-hovering' : ''}`}
                             style={{transition: animate ? `stroke-dashoffset ${duration}ms linear ${delay}ms` : 'none'}}
                             ref={ref}
+                            key={key}
                         />
                     )
                 })}
-                <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="12" x="50%" y="50%" fill="var(--primary-text)" fontWeight="500">
-                    {hovering && (
-                        `${Math.floor(hovering)}%`
-                    )}
-                </text>
+                {hovering && (
+                    <g>
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="150" x="50%" y="48%" fill="var(--primary-text)" fontWeight="500">
+                            {Math.floor(hovering.percentage)}%
+                        </text>
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="60" x="50%" y="58%" fill="var(--primary-text)" fontWeight="700">
+                            {hovering.value}
+                        </text>
+                    </g>
+                )}
             </svg>
         </div>
     )
