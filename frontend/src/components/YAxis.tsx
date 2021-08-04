@@ -19,7 +19,7 @@ export const YAxis: React.FC<Props> = ({ values, height, width }) => {
 
     const axisElements = axisValues.map((value, key) => {
         let y = height - (value / largest) * height + 24;
-        if(y > height) y = height - 30;
+        if(y + 20 > height) return null;
         if(value === largest) {
             y = 23;
         } 

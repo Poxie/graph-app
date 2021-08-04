@@ -12,6 +12,7 @@ interface Props {
     delay?: number;
     radius?: number;
     hasYAxis?: boolean;
+    hasXAxis?: boolean;
 }
 interface Bar {
     width: number;
@@ -25,7 +26,7 @@ interface Hover {
     value: number;
     width: number;
 }
-export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.25, radius=8, hasYAxis }) => {
+export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.25, radius=8, hasYAxis, hasXAxis }) => {
     // Container height
     const [height, setHeight] = useState(0);
     // Container width
@@ -37,13 +38,14 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
     const numberValues = values.map(bar => bar.value);
     const largestValue = Math.max(...numberValues);
     const YAxisWidth = hasYAxis ? 40 : 0;
+    const XAxisHeight = hasXAxis ? 50 : 0;
 
     const updateElements = useMemo(() => () => {
         if(!ref.current) return;
         const elements = numberValues.map(value => {
             if(!ref.current) return {height: 0, width: 0, value: 0};
             return {
-                height: (value / largestValue) * (ref.current.offsetHeight - 20),
+                height: (value / largestValue) * (ref.current.offsetHeight - 20) - (value === 1 ? (XAxisHeight / 2 - 10) : XAxisHeight),
                 width: (ref.current.offsetWidth - spacing * (values.length + 1) - YAxisWidth) / values.length,
                 value: value
             }
@@ -78,12 +80,9 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
             {hovering && (
-                <span className="current-hovering" style={{top: `${hovering.top}px`, left: `${hovering.left + YAxisWidth / 2 - 5}px`, width: `${hovering.width + YAxisWidth}px`}}>
+                <span className="current-hovering" style={{top: `${hovering.top - XAxisHeight}px`, left: `${hovering.left + YAxisWidth / 2 - 5}px`, width: `${hovering.width + YAxisWidth}px`}}>
                     {hovering.value}
                 </span>
-            )}
-            {hasYAxis && (
-                <XAxis />
             )}
             <svg height={'100%'} width={'100%'}>
                 {hasYAxis && (
@@ -93,9 +92,19 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
                         width={width}
                     />
                 )}
+                {hasXAxis && (
+                    <XAxis 
+                        values={values.map(value => value.label)}
+                        width={width + YAxisWidth}
+                        height={height}
+                        axisHeight={XAxisHeight}
+                        valueWidth={elements[0]?.width}
+                        yAxisWidth={YAxisWidth}
+                    />
+                )}
                 {elements.map((value, key) => {
                     const x = spacing * (key + 1) + value.width * key + YAxisWidth;
-                    const y = height - value.height;
+                    const y = height - value.height - XAxisHeight;
                     return(
                         <g key={key}>
                             <rect 

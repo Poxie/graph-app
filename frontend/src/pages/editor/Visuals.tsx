@@ -19,6 +19,7 @@ export const Visuals: React.FC<Props> = ({ values, type }) => {
                     values={values}
                     animate={false}
                     hasYAxis={true}
+                    hasXAxis={true}
                 />
             )
             break;
