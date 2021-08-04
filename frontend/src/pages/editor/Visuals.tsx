@@ -28,6 +28,8 @@ export const Visuals: React.FC<Props> = ({ values, type }) => {
                 <LineChart 
                     values={values}
                     animate={false}
+                    hasXAxis={true}
+                    hasYAxis={true}
                 />
             )
             break;

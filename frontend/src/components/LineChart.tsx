@@ -2,12 +2,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import './LineChart.scss';
 import { Flex } from './Flex';
 import { ChartValue } from '../types/ChartValue';
+import { YAxis } from './YAxis';
+import { XAxis } from './XAxis';
 
 interface Props {
     values: ChartValue[];
     animate?: boolean;
+    hasXAxis?: boolean;
+    hasYAxis?: boolean;
 }
-export const LineChart: React.FC<Props> = ({ values, animate }) => {
+export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [points, setPoints] = useState('');
     const [height, setHeight] = useState(0);
@@ -67,6 +71,13 @@ export const LineChart: React.FC<Props> = ({ values, animate }) => {
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
             <svg style={{height: '100%', width: '100%'}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
+                {hasYAxis && (
+                    <YAxis 
+                        height={height}
+                        width={width}
+                        values={numberValues}
+                    />
+                )}
                 <polyline 
                     points={points}
                     fill={'none'}
