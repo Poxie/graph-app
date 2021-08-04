@@ -149,6 +149,38 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
                         </text>
                     </g>
                 )}
+                {elements.map((element, key) => {
+                    const rectWidth = 25;
+                    const rectHeight = 25;
+                    const y = height - key * rectHeight * 1.3 - 25;
+                    const x = 15;
+                    return(
+                        <g 
+                            key={key}
+                            onMouseEnter={() => onEnter(key)}
+                            onMouseLeave={onLeave}
+                        >
+                            <rect 
+                                fill={element.color}
+                                width={rectWidth}
+                                height={rectHeight}
+                                y={y - 17.5}
+                                x={x}
+                                radius={50}
+                                rx={5}
+                            />
+                            <text 
+                                y={y} 
+                                fontSize="16"
+                                x={x + rectWidth + 10} 
+                                fill={'var(--text-muted)'} 
+                                fontWeight="600"
+                            >
+                                {element.label}
+                            </text>
+                        </g>
+                    )
+                })}
             </svg>
         </div>
     )
