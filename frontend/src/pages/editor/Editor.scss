@@ -32,8 +32,8 @@
         color: var(--text-muted);
     }
 }
-.sidebar input {
-    margin-bottom: 12px;
+.sidebar .value-inputs:not(:first-of-type) input {
+    margin-top: 12px;
 }
 .value-inputs {
     input {
