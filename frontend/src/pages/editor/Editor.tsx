@@ -5,6 +5,7 @@ import { Sidebar } from "./Sidebar"
 import { Visuals } from "./Visuals";
 import './Editor.scss';
 import { initialChartValues } from "../../types/ChartValue";
+import { DownloadChart } from "./DownloadChart";
 
 interface Props {
     type: Params['type'];
@@ -24,6 +25,7 @@ export const Editor: React.FC<Props> = ({ type }) => {
                 type={type}
                 values={values.filter(value => !isNaN(value.value))}
             />
+            <DownloadChart />
         </Flex>
     )
 }
