@@ -105,7 +105,7 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
                 />
                 {hasXAxis && (
                     <XAxis 
-                        axisHeight={xAxisHeight - 5}
+                        axisHeight={xAxisHeight}
                         height={height}
                         valueWidth={10}
                         values={values.map(value => value.label)}

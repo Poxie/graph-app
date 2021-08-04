@@ -16,7 +16,7 @@ export const XAxis: React.FC<Props> = ({ values, width, height, axisHeight, valu
     useEffect(() => {
         if(!valueWidth) return;
         const elements = values.map((value, key) => {
-            const y = height - axisHeight / 2;
+            const y = height - axisHeight / 2 + 5;
             let x;
             if(!isAlignedLeft) {
                 x = yAxisWidth + key * valueWidth + (width / values.length) / 2 + key * 14 + key;
