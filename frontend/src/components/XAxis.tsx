@@ -7,24 +7,30 @@ interface Props {
     axisHeight: number;
     valueWidth: number;
     yAxisWidth: number;
+    isAlignedLeft?: boolean;
 }
 
-export const XAxis: React.FC<Props> = ({ values, width, height, axisHeight, valueWidth, yAxisWidth }) => {
+export const XAxis: React.FC<Props> = ({ values, width, height, axisHeight, valueWidth, yAxisWidth, isAlignedLeft }) => {
     const [elements, setElements] = useState<JSX.Element[]>([]);
     
     useEffect(() => {
         if(!valueWidth) return;
         const elements = values.map((value, key) => {
             const y = height - axisHeight / 2;
-            const x = yAxisWidth + key * valueWidth + (width / values.length) / 2 + key * 14 + key;
+            let x;
+            if(!isAlignedLeft) {
+                x = yAxisWidth + key * valueWidth + (width / values.length) / 2 + key * 14 + key;
+            } else {
+                x = (width / (values.length - 1) - (14 - values.length)) * key + yAxisWidth;
+            }
+            if(x + 60 > width) x = width - 60;
             return(
-                <g width={valueWidth}>
+                <g>
                     <text
                         fill={`var(--primary-text)`}
-                        alignmentBaseline={'middle'}
-                        textAnchor={'middle'}
                         y={y}
                         x={x}
+                        textAnchor={'middle'}
                         color={'var(--text-muted)'}
                     >
                         {value}

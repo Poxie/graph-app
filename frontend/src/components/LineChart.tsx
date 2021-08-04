@@ -21,10 +21,12 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
     const numberValues = values.map(value => value.value);
     const highestValue = Math.max(...numberValues);
     const valueLength = values.length;
+    const yAxisWidth = hasYAxis ? 50 : 0;
+    const xAxisHeight = hasXAxis ? 50 : 0;
 
     const getPoints = useMemo(() => (values: number[], chartWidth: number, chartHeight: number) => {
         return values.map((value, key) => {
-            const x = (key / (valueLength - 1)) * chartWidth;
+            const x = (key / (valueLength - 1)) * chartWidth + yAxisWidth;
             const y = chartHeight - (value / highestValue) * (chartHeight - 20);
 
             return `${x},${y}`;
@@ -36,7 +38,7 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
         
         const chartWidth = ref.current.offsetWidth;
         const chartHeight = ref.current.offsetHeight;
-        const points = getPoints(numberValues, chartWidth, chartHeight).join(' ');
+        const points = getPoints(numberValues, chartWidth - yAxisWidth, chartHeight - xAxisHeight).join(' ');
         setPoints(points);
         setWidth(chartWidth);
         setHeight(chartHeight);
@@ -53,8 +55,8 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
             const left = e.pageX - chartLeft;
             const pointWidth = ref.current.offsetWidth / valueLength;
             const pointIndex = Math.floor(left / pointWidth);
-            const newPoints = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) - 1.006)?.join(' ');
-            const newPointsToo = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) + 1.006)?.join(' ');
+            const newPoints = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) - .006)?.join(' ');
+            const newPointsToo = points.split(' ')[pointIndex]?.split(',').map(point => parseInt(point) + .006)?.join(' ');
             setHoverPoint([newPoints, newPointsToo, {value: numberValues[pointIndex], left: newPoints?.split(' ')[0], top: newPoints?.split(' ')[1]}]);
         }
         ref.current?.addEventListener('mousemove', handleMouseMove);
@@ -68,12 +70,19 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
     const pathPointsObjects = points.split(' ').map(point => {return {top: point.split(',')[0], left: point.split(',')[1]}});
     let pathPoints = pathPointsObjects.map(point => `L ${point.top} ${point.left}`).join(' ');
     pathPoints += ` L ${pathPointsObjects[pathPointsObjects.length - 1].top} ${height}`
+    let backgroundPathPoints: string | string[] = pathPoints.split(' ');
+    backgroundPathPoints[2] = (parseInt(backgroundPathPoints[2]) - 5).toString();
+    backgroundPathPoints = backgroundPathPoints.join(' ');
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
             <svg style={{height: '100%', width: '100%'}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
+                <path 
+                    fill={'var(--third-background)'}
+                    d={`M ${0} ${parseInt(pathPoints.split(' ')[2]) - 5} ${backgroundPathPoints} L ${0} ${height}`}
+                />
                 {hasYAxis && (
                     <YAxis 
-                        height={height}
+                        height={height - xAxisHeight}
                         width={width}
                         values={numberValues}
                     />
@@ -81,13 +90,9 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
                 <polyline 
                     points={points}
                     fill={'none'}
-                    strokeWidth={10}
+                    strokeWidth={7}
                     stroke={'var(--primary-color)'}
                     strokeLinecap={'round'}
-                />
-                <path 
-                    fill={'var(--third-background)'}
-                    d={`M 0 ${height} ${pathPoints}`}
                 />
                 <path 
                     fill={'var(--primary-color)'}
@@ -98,6 +103,17 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
                     className={'hover-point'}
                     data-point-value={hoverPoint[2]}
                 />
+                {hasXAxis && (
+                    <XAxis 
+                        axisHeight={xAxisHeight - 5}
+                        height={height}
+                        valueWidth={10}
+                        values={values.map(value => value.label)}
+                        width={width}
+                        yAxisWidth={yAxisWidth}
+                        isAlignedLeft={true}
+                    />
+                )}
             </svg>
             <span className="hover-value" style={{left: `${hoverPoint[2].left - 48}px`, top: `${hoverPoint[2].top - 40}px`}}>
                 {hoverPoint[2].value}
