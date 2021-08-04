@@ -98,7 +98,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
     }
     return(
         <div className="chart pie-chart" ref={ref}>
-            <svg width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
+            <svg style={{backgroundColor: 'var(--secondary-background)'}} width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
                 {elements.map((element, key) => {
                     const dashArray = 2*Math.PI*radius;
                     const dashOffset = dashArray - (dashArray * element.percentage / 100);
@@ -152,7 +152,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
                 {elements.map((element, key) => {
                     const rectWidth = 25;
                     const rectHeight = 25;
-                    const y = height - key * rectHeight * 1.3 - 25;
+                    const y = height - key * rectHeight * 1.3 - 45;
                     const x = 15;
                     return(
                         <g 
@@ -181,6 +181,15 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
                         </g>
                     )
                 })}
+                <text 
+                    y={height - 15} 
+                    x={15}
+                    fontSize={16}
+                    fill={'var(--text-muted)'}
+                    fontWeight={600}
+                >
+                    {numberValues.reduce((a, b) => a + b)} total
+                </text>
             </svg>
         </div>
     )

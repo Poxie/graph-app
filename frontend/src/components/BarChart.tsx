@@ -84,7 +84,7 @@ export const BarChart: React.FC<Props> = ({ values, animate, spacing=15, delay=.
                     {hovering.value}
                 </span>
             )}
-            <svg height={'100%'} width={'100%'}>
+            <svg height={'100%'} width={'100%'} style={{backgroundColor: 'var(--secondary-background)'}}>
                 {hasYAxis && (
                     <YAxis 
                         values={numberValues}

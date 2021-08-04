@@ -75,7 +75,7 @@ export const LineChart: React.FC<Props> = ({ values, animate, hasXAxis, hasYAxis
     backgroundPathPoints = backgroundPathPoints.join(' ');
     return(
         <Flex className={`chart${animate ? ' animate' : ''}`} ref={ref}>
-            <svg style={{height: '100%', width: '100%'}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
+            <svg style={{height: '100%', width: '100%', backgroundColor: 'var(--secondary-background)'}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
                 <path 
                     fill={'var(--third-background)'}
                     d={`M ${0} ${parseInt(pathPoints.split(' ')[2]) - 5} ${backgroundPathPoints} L ${0} ${height}`}
