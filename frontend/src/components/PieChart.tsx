@@ -32,8 +32,15 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
     const [hovering, setHovering] = useState<null | number>(null);
     const ref = useRef<HTMLDivElement>(null);
     const filled = useRef(0);
+    const colors = useRef<string[]>([]);
 
     const numberValues = values.map(value => value.value);
+
+    const generateColor = useMemo(() => (index: number) => {
+        const color = getPercentageColor(index);
+        colors.current.push(color);
+        return color;
+    }, []);
 
     const updateElements = useMemo(() => () => {
         if(!ref.current) return;
@@ -44,7 +51,7 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=15, animate }) =
         const elements = numberValues.map((value, key) => {
             return {
                 percentage: (value / valueTotal) * 100,
-                color: getPercentageColor(key),
+                color: colors.current[key] || generateColor(key),
                 value
             }
         })
