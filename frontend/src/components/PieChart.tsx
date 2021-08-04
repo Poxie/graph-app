@@ -26,7 +26,7 @@ interface Element {
     isHovering?: boolean;
     hasHoveringElement?: boolean;
 }
-export const PieChart: React.FC<Props> = ({ values, strokeWidth=200, animate }) => {
+export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [elements, setElements] = useState<Element[]>([]);
@@ -92,15 +92,18 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=200, animate }) 
         }));
     }, []);
 
-    const radius = width / 3;
+    let radius = 200;
+    if(radius * 2 + 100 > width) {
+        radius = width / 2 - 100;
+    }
     return(
         <div className="chart pie-chart" ref={ref}>
-            <svg width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${width}`}>
+            <svg width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
                 {elements.map((element, key) => {
                     const dashArray = 2*Math.PI*radius;
                     const dashOffset = dashArray - (dashArray * element.percentage / 100);
                     const angle = (filled.current * 360 / 100) + (-90);
-                    const rotate = `rotate(${angle} ${width / 2} ${width / 2})`;
+                    const rotate = `rotate(${angle} ${width / 2} ${height / 2})`;
 
                     const ref = createRef<SVGCircleElement>()
 
@@ -138,10 +141,10 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=200, animate }) 
                 })}
                 {hovering && (
                     <g>
-                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="150" x="50%" y="48%" fill="var(--primary-text)" fontWeight="500">
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="100" x="50%" y="48%" fill="var(--primary-text)" fontWeight="500">
                             {Math.floor(hovering.percentage)}%
                         </text>
-                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="60" x="50%" y="58%" fill="var(--primary-text)" fontWeight="700">
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="40" x="50%" y="58%" fill="var(--primary-text)" fontWeight="700">
                             {hovering.value}
                         </text>
                     </g>
