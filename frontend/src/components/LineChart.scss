@@ -6,8 +6,8 @@
 
     &.animate {
         polyline {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
+            stroke-dasharray: 150%;
+            stroke-dashoffset: 150%;
             animation: dash 3s ease-in-out forwards;
         }
     }
