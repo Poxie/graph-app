@@ -97,8 +97,11 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=80, animate, has
     if(radius * 2 + 100 > width) {
         radius = width / 2 - 90;
     }
+    if(radius * 2 + 100 > height) {
+        radius = width / 2.8 - 90;
+    }
     let fontSize = 80;
-    if(width - 300 < fontSize) fontSize = 35;
+    if(width - 300 < fontSize || height - 300 < fontSize) fontSize = 35;
     return(
         <div className="chart pie-chart" ref={ref}>
             <svg style={{backgroundColor: 'var(--secondary-background)'}} width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
