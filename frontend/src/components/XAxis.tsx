@@ -21,7 +21,7 @@ export const XAxis: React.FC<Props> = ({ values, width, height, axisHeight, valu
             if(!isAlignedLeft) {
                 x = yAxisWidth + key * valueWidth + (width / values.length) / 2 + key * 14 + key;
             } else {
-                x = (width / (values.length - 1) - (14 - values.length)) * key + yAxisWidth;
+                x = (width / (values.length - 1) - (16 - values.length)) * key + yAxisWidth;
             }
             if(x + 60 > width) x = width - 60;
             return(

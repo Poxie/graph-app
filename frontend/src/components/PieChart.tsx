@@ -17,6 +17,7 @@ interface Props {
     values: ChartValue[];
     strokeWidth?: number
     animate?: boolean;
+    hasLabels?: boolean;
 }
 interface Element {
     percentage: number;
@@ -26,7 +27,7 @@ interface Element {
     isHovering?: boolean;
     hasHoveringElement?: boolean;
 }
-export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) => {
+export const PieChart: React.FC<Props> = ({ values, strokeWidth=80, animate, hasLabels=true }) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [elements, setElements] = useState<Element[]>([]);
@@ -94,8 +95,10 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
 
     let radius = 200;
     if(radius * 2 + 100 > width) {
-        radius = width / 2 - 100;
+        radius = width / 2 - 90;
     }
+    let fontSize = 80;
+    if(width - 300 < fontSize) fontSize = 35;
     return(
         <div className="chart pie-chart" ref={ref}>
             <svg style={{backgroundColor: 'var(--secondary-background)'}} width={'100%'} height={'100%'} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="all">
@@ -140,16 +143,16 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
                     )
                 })}
                 {hovering && (
-                    <g>
-                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="100" x="50%" y="48%" fill="var(--primary-text)" fontWeight="500">
+                    <g pointerEvents={'none'}>
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize={fontSize} x="50%" y="49%" fill="var(--primary-text)" fontWeight="500">
                             {Math.floor(hovering.percentage)}%
                         </text>
-                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize="40" x="50%" y="58%" fill="var(--primary-text)" fontWeight="700">
+                        <text textAnchor={'middle'} alignmentBaseline={'middle'} fontSize={fontSize * .35} x="50%" y="56%" fill="var(--primary-text)" fontWeight="700">
                             {hovering.value}
                         </text>
                     </g>
                 )}
-                {elements.map((element, key) => {
+                {hasLabels && elements.map((element, key) => {
                     const rectWidth = 25;
                     const rectHeight = 25;
                     const y = height - key * rectHeight * 1.3 - 45;
@@ -181,15 +184,17 @@ export const PieChart: React.FC<Props> = ({ values, strokeWidth=100, animate }) 
                         </g>
                     )
                 })}
-                <text 
-                    y={height - 15} 
-                    x={15}
-                    fontSize={16}
-                    fill={'var(--text-muted)'}
-                    fontWeight={600}
-                >
-                    {numberValues.reduce((a, b) => a + b)} total
-                </text>
+                {hasLabels && (
+                    <text 
+                        y={height - 15} 
+                        x={15}
+                        fontSize={16}
+                        fill={'var(--text-muted)'}
+                        fontWeight={600}
+                    >
+                        {numberValues.reduce((a, b) => a + b)} total
+                    </text>
+                )}
             </svg>
         </div>
     )
